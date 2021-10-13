@@ -1,6 +1,7 @@
 var request = require('request')
 var t = require("./util")
-var data = process.env.TOKEN_DATA
+var token_data = process.env.TOKEN_DATA
+
 
 function getToken(a) {
 	var s = JSON.parse(t.Decrypt(a))
@@ -11,7 +12,7 @@ function getToken(a) {
 
 var a = {
 	queryDate: t.formatTime(new Date()),
-	phone: getToken(data)
+	phone: getToken(token_data)
 }
 
 var headers = {
@@ -37,4 +38,9 @@ function callback(error, response, body) {
     }
 }
 
-request(options, callback)
+if(!token_data){
+	return console.log('请设置TOKEN_DATA!')
+}else{
+	request(options, callback)
+}
+
