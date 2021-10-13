@@ -1,0 +1,45 @@
+name: ah163
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  schedule: #18点执行 utc+8
+    - cron: 0 10 * * *
+  watch:
+    types: started
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.event.repository.owner.id == github.event.sender.id
+    
+    strategy:
+      matrix:
+        node-version: [14.x]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v2
+
+      # 设置服务器时区为东八区
+      - name: Set time zone
+        run: sudo timedatectl set-timezone 'Asia/Shanghai'
+
+      # Node.js 环境
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      # 安装Npm依赖
+      - name: Install dependencies
+        run: npm install
+
+      # 运行
+      - name: Run APP
+        env:
+          TOKEN_DATA: ${{secrets.TOKEN_DATA}}
+
+        run: npm run start
