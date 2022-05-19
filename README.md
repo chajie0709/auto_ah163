@@ -4,3 +4,5 @@
 添加名为TOKEN_DATA的变量: Settings->Secrets->New secret
 
 变量值为抓包getphone接口的返回值
+
+token会自动失效，所以需要定时更新
